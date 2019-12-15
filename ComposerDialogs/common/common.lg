@@ -1,0 +1,43 @@
+> To learn more about the LG file format, read the documentation at
+> https://github.com/microsoft/BotBuilder-Samples/blob/master/experimental/language-generation/docs/lg-file-format.md
+
+# ProductCard(item)
+[HeroCard
+    title = {item.Name}
+    subtitle = Tailwind Trader Products
+    image = {item.Image}
+    buttons = I would like a {item.Name}
+]
+
+# ListProducts (collection, category)
+- IF: @{collection != null && count(collection) != 0}
+    - @{foreach(collection , item, @{ProductCard(item)})}
+- ELSE:
+    - Looks like there's no **{category}** items :(
+
+# bfdactivity-339747()
+- Hi there! What kinds of things are you interested in?
+
+# bfdprompt-468042()
+- I didn't understand, what product category are you interested in?
+
+# bfddefaultValueResponse-468042()
+-
+
+# bfdactivity-713587()
+- Checking to see if I have things in the **{conversation.category}** category
+
+# bfdactivity-357525()
+- @{ProductCard(dialog.foreach.value)}
+
+# bfdactivity-819134()
+- Looks like there's no **{conversation.category}** items :(
+
+# bfdprompt-616833()
+- What product would you like to purchase?
+
+# bfddefaultValueResponse-616833()
+-
+
+# bfdactivity-100263()
+- A **{conversation.product}** would be awesome!

@@ -1,0 +1,14 @@
+# CategoryQuery
+- Do you have {category=hardware}?
+- Do you have any {category=hardware}?
+- Do you have any {category=garden} items?
+- What about {category=automotive}?
+- Do you have any {category=gardening} products?
+- What about {category=food} products?
+- Any {category=jewelry} things?
+
+# ProductPuchase
+- I would like to buy a {product=shovel}
+- I would like a {product=hammer}
+- Can I buy a {product=wrench}?
+

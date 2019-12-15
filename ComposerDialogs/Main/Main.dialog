@@ -1,0 +1,170 @@
+{
+  "$type": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "$designer": {
+      "name": "TTServiceBot",
+      "id": "139226"
+    }
+  },
+  "autoEndDialog": "true",
+  "defaultResultProperty": "dialog.result",
+  "recognizer": "Main.lu",
+  "triggers": [
+    {
+      "$type": "Microsoft.OnConversationUpdateActivity",
+      "$designer": {
+        "id": "376720"
+      },
+      "condition": "toLower(turn.Activity.membersAdded[0].name) != 'bot'",
+      "actions": [
+        {
+          "$type": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "339747",
+            "name": "Send a response"
+          },
+          "activity": "@{bfdactivity-339747()}"
+        }
+      ]
+    },
+    {
+      "$type": "Microsoft.OnIntent",
+      "$designer": {
+        "id": "995716"
+      },
+      "intent": "CategoryQuery",
+      "actions": [
+        {
+          "$type": "Microsoft.TextInput",
+          "$designer": {
+            "id": "468042",
+            "name": "Text input"
+          },
+          "prompt": "@{bfdprompt-468042()}",
+          "maxTurnCount": 3,
+          "property": "conversation.category",
+          "value": "@category",
+          "alwaysPrompt": false,
+          "allowInterruptions": "turn.recognized.score > 0.7 && !#CategoryQuery && !@category",
+          "outputFormat": "lowercase"
+        },
+        {
+          "$type": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "713587",
+            "name": "Send a response"
+          },
+          "activity": "@{bfdactivity-713587()}"
+        },
+        {
+          "$type": "Microsoft.HttpRequest",
+          "$designer": {
+            "id": "712948",
+            "name": "Send an HTTP request"
+          },
+          "url": "https://ttproductapi.azurewebsites.net/api/products/{conversation.category}",
+          "resultProperty": "conversation.products",
+          "responseType": "Json"
+        },
+        {
+          "$type": "Microsoft.SetProperty",
+          "$designer": {
+            "id": "309026",
+            "name": "Set a property"
+          },
+          "property": "conversation.products",
+          "value": "conversation.products.content"
+        },
+        {
+          "$type": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "275867",
+            "name": "Branch: if/else"
+          },
+          "condition": "count(conversation.products) > 0",
+          "actions": [
+            {
+              "$type": "Microsoft.Foreach",
+              "$designer": {
+                "id": "962329",
+                "name": "Loop: for each item"
+              },
+              "itemsProperty": "conversation.products",
+              "actions": [
+                {
+                  "$type": "Microsoft.SendActivity",
+                  "$designer": {
+                    "id": "357525",
+                    "name": "Send a response"
+                  },
+                  "activity": "@{bfdactivity-357525()}"
+                }
+              ]
+            }
+          ],
+          "elseActions": [
+            {
+              "$type": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "819134",
+                "name": "Send a response"
+              },
+              "activity": "@{bfdactivity-819134()}"
+            }
+          ]
+        },
+        {
+          "$type": "Microsoft.SetProperty",
+          "$designer": {
+            "id": "702397",
+            "name": "Set a property"
+          },
+          "property": "conversation.category",
+          "value": "null"
+        }
+      ]
+    },
+    {
+      "$type": "Microsoft.OnIntent",
+      "$designer": {
+        "id": "653307"
+      },
+      "intent": "ProductPuchase",
+      "actions": [
+        {
+          "$type": "Microsoft.TextInput",
+          "$designer": {
+            "id": "616833",
+            "name": "Text input"
+          },
+          "prompt": "@{bfdprompt-616833()}",
+          "maxTurnCount": 3,
+          "property": "conversation.product",
+          "value": "@product",
+          "alwaysPrompt": false,
+          "allowInterruptions": "false",
+          "outputFormat": "none"
+        },
+        {
+          "$type": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "100263",
+            "name": "Send a response"
+          },
+          "activity": "@{bfdactivity-100263()}"
+        },
+        {
+          "$type": "Microsoft.SetProperty",
+          "$designer": {
+            "id": "757152",
+            "name": "Set a property"
+          },
+          "property": "conversation.product",
+          "value": "null"
+        }
+      ]
+    }
+  ],
+  "$schema": "https://raw.githubusercontent.com/microsoft/BotFramework-Composer/stable/Composer/packages/server/schemas/sdk.schema",
+  "generator": "common.lg"
+}
